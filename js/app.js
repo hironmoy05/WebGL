@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'THREE/examples/jsm/controls/OrbitControls';
+import vertex from '../Shaders/vertex.glsl';
+import fragment from '../Shaders/fragment.glsl';
 
 export default class Sketch {
 	constructor(options) {
@@ -18,7 +20,7 @@ export default class Sketch {
 
 		this.scene = new THREE.Scene();
 
-		this.renderer = new THREE.WebGLRenderer();
+		this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 		this.renderer.setSize(this.width, this.height);
 		this.container.appendChild(this.renderer.domElement);
 		this.controls = new OrbitControls(this.camera, this.renderer.domElement);
@@ -44,12 +46,23 @@ export default class Sketch {
 
 	addObjects = () => {
 		this.geometry = new THREE.PlaneBufferGeometry(0.5, 0.5);
-		this.material = new THREE.MeshBasicMaterial({
-			color: 0xffaa00,
-		});
+		// this.material = new THREE.MeshBasicMaterial({
+		// 	color: 0xffaa00,
+		// });
 
 		this.renderer.setPixelRatio(window.devicePixelRatio);
 		// this.renderer.setPixelRatio(2);
+
+		this.material = new THREE.ShaderMaterial({
+			wireframe: true,
+			uniforms: {
+				time: { value: 0 },
+				resolution: { value: new THREE.Vector2() },
+			},
+
+			vertexShader: vertex,
+			fragmentShader: fragment,
+		});
 
 		this.mesh = new THREE.Mesh(this.geometry, this.material);
 		this.scene.add(this.mesh);
