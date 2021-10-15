@@ -43,8 +43,13 @@ export default class Sketch {
 	}
 
 	addObjects = () => {
-		this.geometry = new THREE.BoxBufferGeometry(0.2, 0.2, 0.2);
-		this.material = new THREE.MeshNormalMaterial();
+		this.geometry = new THREE.PlaneBufferGeometry(0.5, 0.5);
+		this.material = new THREE.MeshBasicMaterial({
+			color: 0xffaa00,
+		});
+
+		this.renderer.setPixelRatio(window.devicePixelRatio);
+		// this.renderer.setPixelRatio(2);
 
 		this.mesh = new THREE.Mesh(this.geometry, this.material);
 		this.scene.add(this.mesh);
