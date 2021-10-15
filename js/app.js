@@ -60,7 +60,7 @@ export default class Sketch {
 			uniforms: {
 				time: { value: 0 },
 				resolution: { value: new THREE.Vector2() },
-				uTexture: { value: new THREE.TextureLoader().load(testTexture) },
+				uTexture: { value: new THREE.TextureLoader().load(water) },
 			},
 
 			vertexShader: vertex,

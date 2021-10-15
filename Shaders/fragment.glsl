@@ -16,6 +16,9 @@ void main () {
 
     // gl_FragColor = vec4(sinePulse, 0., 0., 1.);
 
-    vec4 image = texture(uTexture, vUv);
+    // vec4 image = texture(uTexture, vUv);
+    // gl_FragColor = image;
+
+    vec4 image = texture(uTexture, vUv + 0.01*sin(vUv*20. + time));
     gl_FragColor = image;
 }
