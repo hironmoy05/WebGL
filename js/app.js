@@ -75,6 +75,7 @@ export default class Sketch {
 				time: { value: 0 },
 				uProgress: { value: 0 },
 				uResolution: { value: new THREE.Vector2(this.width, this.height) },
+				uTextureSize: { value: new THREE.Vector2(100, 100) },
 				uTexture: { value: new THREE.TextureLoader().load(testTexture) },
 				uQuadSize: { value: new THREE.Vector2(300, 300) },
 			},

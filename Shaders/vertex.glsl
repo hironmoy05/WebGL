@@ -7,6 +7,7 @@ varying float sine;
 varying vec2 vUv;
 varying vec3 vNormal;
 varying float sinePulse;
+varying vec2 vSize;
 
 // https://gist.github.com/hironmoy05/9d311fc360098982d8b8e6631ece2d3e
 
@@ -143,6 +144,8 @@ void main () {
     fullScreenState.y *= uResolution.y/uQuadSize.y;
 
     vec4 finalState = mix(defaultState, fullScreenState, uProgress);
+
+    vSize = mix(uQuadSize, uResolution, uProgress);
 
     gl_Position = projectionMatrix * viewMatrix * finalState;
 }
