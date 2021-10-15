@@ -1,0 +1,18 @@
+{
+	"name": "WebGL",
+	"version": "1.0.0",
+	"main": "index.js",
+	"author": "hironmoy05 <hironmoy05@gmail.com>",
+	"license": "MIT",
+	"scripts": {
+		"dev": "parcel index.html",
+		"build": "parcel build index.html",
+		"clean": "rm -rf dist"
+	},
+	"devDependencies": {
+		"parcel-bundler": "^1.12.5"
+	},
+	"dependencies": {
+		"three": "^0.133.1"
+	}
+}
