@@ -5,6 +5,7 @@ import fragment from '../Shaders/fragment.glsl';
 import testTexture from '../img/texture.jpg';
 import water from '../img/water.jpg';
 import * as dat from 'dat.gui';
+import gsap from 'gsap';
 
 export default class Sketch {
 	constructor(options) {
@@ -78,11 +79,21 @@ export default class Sketch {
 				uTextureSize: { value: new THREE.Vector2(100, 100) },
 				uTexture: { value: new THREE.TextureLoader().load(testTexture) },
 				uQuadSize: { value: new THREE.Vector2(300, 300) },
+				uCorners: { value: new THREE.Vector2(0, 0) },
 			},
 
 			vertexShader: vertex,
 			fragmentShader: fragment,
 		});
+
+		this.tl = gsap
+			.timeline()
+			.to(this.material.uniforms.uCorners.value, {
+				x: 1,
+			})
+			.to(this.material.uniforms.uCorners.value, {
+				y: 1,
+			});
 
 		this.mesh = new THREE.Mesh(this.geometry, this.material);
 		this.scene.add(this.mesh);
@@ -94,7 +105,8 @@ export default class Sketch {
 		this.time += 0.05;
 
 		this.material.uniforms.time.value = this.time;
-		this.material.uniforms.uProgress.value = this.settings.progress;
+		// this.material.uniforms.uProgress.value = this.settings.progress;
+		this.tl.progress(this.settings.progress);
 
 		this.mesh.rotation.x = this.time / 2000;
 		this.mesh.rotation.y = this.time / 2000;
