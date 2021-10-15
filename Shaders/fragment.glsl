@@ -25,5 +25,9 @@ void main () {
     // gl_FragColor = image;
 
     // with vNormal we create a un-joinable object
-    gl_FragColor = vec4(sinePulse, 0., 0., 1.0);
+    // gl_FragColor = vec4(sinePulse, 0., 0., 1.0);
+
+    vec4 image = texture(uTexture, vUv);
+
+    gl_FragColor = image;
 }

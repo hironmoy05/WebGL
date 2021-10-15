@@ -1,4 +1,5 @@
 uniform float time;
+uniform float uProgress;
 
 varying float sine;
 varying vec2 vUv;
@@ -125,11 +126,18 @@ void main () {
     // newPosition = newPosition + 0.5*normal * snoise(vec4(normal*1., time * 0.05));
 
     // make more distortion
-    float noise = snoise(vec4(normal*40., time * 0.05));
+    // float noise = snoise(vec4(normal*40., time * 0.05));
 
-    newPosition = newPosition + 0.5*normal * noise;
+    // newPosition = newPosition + 0.5*normal * noise;
 
-    sinePulse = noise;
+    // sinePulse = noise;
 
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+    // gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+
+    vec4 defaultState = modelMatrix * vec4(position, 1.0);
+    vec4 fullScreenState = vec4(position, 1.0);
+
+    vec4 finalState = mix(defaultState, fullScreenState, uProgress);
+
+    gl_Position = projectionMatrix * viewMatrix * finalState;
 }

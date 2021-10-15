@@ -4,6 +4,7 @@ import vertex from '../Shaders/vertex.glsl';
 import fragment from '../Shaders/fragment.glsl';
 import testTexture from '../img/texture.jpg';
 import water from '../img/water.jpg';
+import * as dat from 'dat.gui';
 
 export default class Sketch {
 	constructor(options) {
@@ -14,11 +15,14 @@ export default class Sketch {
 		this.camera = new THREE.PerspectiveCamera(
 			70,
 			this.width / this.height,
-			0.01,
-			10
+			10,
+			1000
 		);
 
-		this.camera.position.z = 1;
+		this.camera.position.z = 600;
+
+		// With this we set the object's exact width and height as we give in 'WebGLRenderer'
+		this.camera.fov = (2 * Math.atan(this.height / 2 / 600) * 180) / Math.PI;
 
 		this.scene = new THREE.Scene();
 
@@ -28,10 +32,20 @@ export default class Sketch {
 		this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 
 		this.time = 0;
+		this.setupSettings();
 		this.resize();
 		this.addObjects();
 		this.render();
 		this.setupResize();
+	}
+
+	setupSettings() {
+		this.settings = {
+			progress: 0,
+		};
+
+		this.gui = new dat.GUI();
+		this.gui.add(this.settings, 'progress', 0, 1, 0.01);
 	}
 
 	resize = () => {
@@ -47,7 +61,7 @@ export default class Sketch {
 	}
 
 	addObjects = () => {
-		this.geometry = new THREE.SphereBufferGeometry(0.2, 100, 100);
+		this.geometry = new THREE.PlaneBufferGeometry(300, 300, 100, 100);
 		// this.material = new THREE.MeshBasicMaterial({
 		// 	color: 0xffaa00,
 		// });
@@ -59,8 +73,9 @@ export default class Sketch {
 			wireframe: false,
 			uniforms: {
 				time: { value: 0 },
+				uProgress: { value: 0 },
 				resolution: { value: new THREE.Vector2() },
-				uTexture: { value: new THREE.TextureLoader().load(water) },
+				uTexture: { value: new THREE.TextureLoader().load(testTexture) },
 			},
 
 			vertexShader: vertex,
@@ -69,16 +84,19 @@ export default class Sketch {
 
 		this.mesh = new THREE.Mesh(this.geometry, this.material);
 		this.scene.add(this.mesh);
+		this.mesh.position.x = 300;
+		this.mesh.rotation.z = 0.5;
 	};
 
 	render = () => {
 		this.time += 0.05;
 
 		this.material.uniforms.time.value = this.time;
+		this.material.uniforms.uProgress.value = this.settings.progress;
 
 		this.mesh.rotation.x = this.time / 2000;
 		this.mesh.rotation.y = this.time / 2000;
-		this.mesh.rotation.z = this.time / 2000;
+		// this.mesh.rotation.z = this.time / 2000;
 
 		// console.log(this.time);
 		this.renderer.render(this.scene, this.camera);
