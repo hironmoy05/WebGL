@@ -47,7 +47,7 @@ export default class Sketch {
 	}
 
 	addObjects = () => {
-		this.geometry = new THREE.PlaneBufferGeometry(0.5, 0.5, 100, 100);
+		this.geometry = new THREE.SphereBufferGeometry(0.2, 100, 100);
 		// this.material = new THREE.MeshBasicMaterial({
 		// 	color: 0xffaa00,
 		// });
