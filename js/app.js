@@ -79,7 +79,7 @@ export default class Sketch {
 				uTextureSize: { value: new THREE.Vector2(100, 100) },
 				uTexture: { value: new THREE.TextureLoader().load(testTexture) },
 				uQuadSize: { value: new THREE.Vector2(300, 300) },
-				uCorners: { value: new THREE.Vector2(0, 0) },
+				uCorners: { value: new THREE.Vector4(0, 0, 0, 0) },
 			},
 
 			vertexShader: vertex,
@@ -90,10 +90,32 @@ export default class Sketch {
 			.timeline()
 			.to(this.material.uniforms.uCorners.value, {
 				x: 1,
+				duration: 1,
 			})
-			.to(this.material.uniforms.uCorners.value, {
-				y: 1,
-			});
+			.to(
+				this.material.uniforms.uCorners.value,
+				{
+					y: 1,
+					duration: 1,
+				},
+				0.2
+			)
+			.to(
+				this.material.uniforms.uCorners.value,
+				{
+					w: 1,
+					duration: 1,
+				},
+				0.4
+			)
+			.to(
+				this.material.uniforms.uCorners.value,
+				{
+					z: 1,
+					duration: 1,
+				},
+				0.6
+			);
 
 		this.mesh = new THREE.Mesh(this.geometry, this.material);
 		this.scene.add(this.mesh);
