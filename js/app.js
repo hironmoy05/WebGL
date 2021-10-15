@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { OrbitControls } from 'THREE/examples/jsm/controls/OrbitControls';
 
 export default class Sketch {
 	constructor(options) {
@@ -20,6 +21,7 @@ export default class Sketch {
 		this.renderer = new THREE.WebGLRenderer();
 		this.renderer.setSize(this.width, this.height);
 		this.container.appendChild(this.renderer.domElement);
+		this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 
 		this.time = 0;
 		this.addObjects();
