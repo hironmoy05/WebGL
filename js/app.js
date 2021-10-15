@@ -74,8 +74,9 @@ export default class Sketch {
 			uniforms: {
 				time: { value: 0 },
 				uProgress: { value: 0 },
-				resolution: { value: new THREE.Vector2() },
+				uResolution: { value: new THREE.Vector2(this.width, this.height) },
 				uTexture: { value: new THREE.TextureLoader().load(testTexture) },
+				uQuadSize: { value: new THREE.Vector2(300, 300) },
 			},
 
 			vertexShader: vertex,

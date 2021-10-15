@@ -1,5 +1,7 @@
 uniform float time;
 uniform float uProgress;
+uniform vec2 uQuadSize;
+uniform vec2 uResolution;
 
 varying float sine;
 varying vec2 vUv;
@@ -136,6 +138,9 @@ void main () {
 
     vec4 defaultState = modelMatrix * vec4(position, 1.0);
     vec4 fullScreenState = vec4(position, 1.0);
+
+    fullScreenState.x *= uResolution.x/uQuadSize.x;
+    fullScreenState.y *= uResolution.y/uQuadSize.y;
 
     vec4 finalState = mix(defaultState, fullScreenState, uProgress);
 
