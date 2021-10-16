@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import ASScroll from '@ashthornton/asscroll';
 import { OrbitControls } from 'THREE/examples/jsm/controls/OrbitControls';
 import vertex from '../Shaders/vertex.glsl';
 import fragment from '../Shaders/fragment.glsl';
@@ -31,6 +32,12 @@ export default class Sketch {
 		this.renderer.setSize(this.width, this.height);
 		this.container.appendChild(this.renderer.domElement);
 		this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+
+		this.asscroll = new ASScroll();
+
+		this.asscroll.enable({
+			horizontalScroll: true,
+		});
 
 		this.time = 0;
 		this.setupSettings();
