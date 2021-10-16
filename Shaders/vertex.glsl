@@ -107,9 +107,13 @@ float snoise(vec4 v){
 }
 
 void main () {
+    float PI = 3.1415926;
     vUv = uv;
     vec3 newPosition = position;
     vNormal = normal;
+    float startEndPosition = sin(PI * uProgress);
+
+    float wave = startEndPosition*0.05*sin(length(uv*5. + 15. * uProgress));
 
     // newPosition.x *= 2.;
     // This shows us big waves
@@ -150,7 +154,7 @@ void main () {
       uv.y
     );
 
-    vec4 finalState = mix(defaultState, fullScreenState, cornersProgress);
+    vec4 finalState = mix(defaultState, fullScreenState, uProgress + wave);
 
     vSize = mix(uQuadSize, uResolution, uProgress);
 
