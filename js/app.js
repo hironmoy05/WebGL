@@ -69,7 +69,7 @@ export default class Sketch {
 	}
 
 	addObjects = () => {
-		this.geometry = new THREE.PlaneBufferGeometry(300, 300, 100, 100);
+		this.geometry = new THREE.PlaneBufferGeometry(1, 1, 100, 100);
 		// this.material = new THREE.MeshBasicMaterial({
 		// 	color: 0xffaa00,
 		// });
@@ -125,16 +125,53 @@ export default class Sketch {
 			);
 
 		this.mesh = new THREE.Mesh(this.geometry, this.material);
-		this.scene.add(this.mesh);
-		this.mesh.position.x = 300;
+		// this.mesh.scale.set(300, 300, 1);
+		// this.scene.add(this.mesh);
+
+		this.images = [...document.querySelectorAll('.js-image')];
+
+		this.materials = [];
+
+		this.storeImages = this.images.map((img) => {
+			let bounds = img.getBoundingClientRect();
+			let m = this.material.clone();
+			this.materials.push(m);
+
+			let texture = new THREE.Texture(img);
+
+			m.uniforms.uTexture.value = texture;
+			texture.needsUpdate = true;
+
+			let mesh = new THREE.Mesh(this.geometry, m);
+			mesh.scale.set(bounds.width, bounds.height, 1);
+			this.scene.add(mesh);
+
+			return {
+				img,
+				mesh,
+				width: bounds.width,
+				height: bounds.height,
+				top: bounds.top,
+				left: bounds.left,
+			};
+		});
+	};
+
+	setPosition = () => {
+		this.storeImages.forEach((obj) => {
+			obj.mesh.position.x =
+				-this.asscroll.currentPos + obj.left - this.width / 2 + obj.width / 2;
+			obj.mesh.position.y = -obj.top + this.height / 2 - obj.height / 2;
+		});
 	};
 
 	render = () => {
 		this.time += 0.05;
 
 		this.material.uniforms.time.value = this.time;
-		this.material.uniforms.uProgress.value = this.settings.progress;
-		// this.tl.progress(this.settings.progress);
+		// this.material.uniforms.uProgress.value = this.settings.progress;
+		this.tl.progress(this.settings.progress);
+		this.setPosition();
 
 		this.mesh.rotation.x = this.time / 2000;
 		this.mesh.rotation.y = this.time / 2000;
