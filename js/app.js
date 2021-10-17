@@ -7,6 +7,7 @@ import testTexture from '../img/texture.jpg';
 import water from '../img/water.jpg';
 import * as dat from 'dat.gui';
 import gsap from 'gsap';
+import barba from '@barba/core';
 
 export default class Sketch {
 	constructor(options) {
@@ -38,7 +39,7 @@ export default class Sketch {
 		this.asscroll = new ASScroll();
 
 		this.asscroll.enable({
-			horizontalScroll: true,
+			horizontalScroll: !document.body.classList.contains('b-inside'),
 		});
 
 		this.time = 0;
@@ -46,8 +47,122 @@ export default class Sketch {
 		this.addObjects();
 		this.resize();
 		this.render();
+
+		this.barba();
+
 		this.setupResize();
 	}
+
+	barba = () => {
+		let that = this;
+		barba.init({
+			transitions: [
+				{
+					name: 'from-home-transition',
+					from: {
+						namespace: ['home'],
+					},
+					leave(data) {
+						that.asscroll.disable();
+						return gsap.timeline().to(data.current.container, {
+							opacity: 0,
+						});
+					},
+					enter(data) {
+						that.asscroll = new ASScroll({
+							disableRaf: true,
+							containerElement: data.next.container.querySelector(
+								'[asscroll-container]'
+							),
+						});
+						that.asscroll.enable({
+							newScrollElements:
+								data.next.container.querySelector('.scroll-wrap'),
+						});
+						return gsap.timeline().from(data.next.container, {
+							opacity: 0,
+							onComplete: () => {
+								that.container.style.display = 'none';
+							},
+						});
+					},
+				},
+				{
+					name: 'from-inside-page-transition',
+					from: {
+						namespace: ['inside'],
+					},
+					leave(data) {
+						that.asscroll.disable();
+						return gsap
+							.timeline()
+							.to('.curtain', {
+								duration: 0.3,
+								y: 0,
+							})
+							.to(data.current.container, {
+								opacity: 0,
+							});
+					},
+					enter(data) {
+						that.asscroll = new ASScroll({
+							disableRaf: true,
+							containerElement: data.next.container.querySelector(
+								'[asscroll-container]'
+							),
+						});
+						that.asscroll.enable({
+							horizontalScroll: true,
+							newScrollElements:
+								data.next.container.querySelector('.scroll-wrap'),
+						});
+
+						that.storeImages = [];
+						that.materials = [];
+						that.addObjects();
+						that.resize();
+						that.addClickEvents();
+						that.container.style.display = 'visible';
+
+						return gsap
+							.timeline()
+							.to('.curtain', {
+								duration: 0.3,
+								y: '-100%',
+							})
+							.from(data.next.container, {
+								opacity: 0,
+							});
+					},
+				},
+			],
+		});
+	};
+
+	addClickEvents = () => {
+		this.storeImages.forEach((i) => {
+			i.img.addEventListener('click', () => {
+				let tl = gsap
+					.timeline()
+					.to(i.mesh.material.uniforms.uCorners.value, {
+						x: 1,
+						duration: 0.4,
+					})
+					.to(i.mesh.material.uniforms.uCorners.value, {
+						y: 1,
+						duration: 0.4,
+					})
+					.to(i.mesh.material.uniforms.uCorners.value, {
+						w: 1,
+						duration: 0.4,
+					})
+					.to(i.mesh.material.uniforms.uCorners.value, {
+						z: 1,
+						duration: 0.4,
+					});
+			});
+		});
+	};
 
 	setupSettings() {
 		this.settings = {
